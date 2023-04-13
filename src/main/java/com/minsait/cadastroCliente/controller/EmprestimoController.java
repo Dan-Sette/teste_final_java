@@ -1,6 +1,5 @@
 package com.minsait.cadastroCliente.controller;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +33,7 @@ import com.minsait.cadastroCliente.service.EmprestimoService;
 @RestController
 @RequestMapping("/api/v1/financeira/clientes/")
 public class EmprestimoController {
-	
+
 	private EmprestimoService emprestimoService;
 	private ClienteController clienteController;
 	ModelMapper modelMapper = new ModelMapper();
@@ -53,8 +52,7 @@ public class EmprestimoController {
 		ClienteDTO clienteDTO = clienteDTOOptional.get();
 		Cliente cliente = ClienteDTO.retornaCliente(clienteDTO);
 		Emprestimo emprestimoParaRetorno;
-		BigDecimal totalEmprestimos = this.emprestimoService
-				.calculaValorTotalEmprestimosPorCliente(cliente, emprestimo.getValorInicial());
+		this.emprestimoService.calculaValorTotalEmprestimosPorCliente(cliente, emprestimo.getValorInicial());
 		if(clienteDTOOptional.isPresent()) {
 			emprestimo.setCliente(cliente);
 			emprestimo.setDataInicial(LocalDateTime.now());

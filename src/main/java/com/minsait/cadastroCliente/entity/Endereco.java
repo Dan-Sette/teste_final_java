@@ -14,7 +14,7 @@ public class Endereco {
 	private int numero;
 	
 	@NotNull(message = "CEP não pode ser nulo")
-    @Pattern(regexp = "\\d{5}-\\d{3}", message = "CEP inválido. Deve estar no formato XXXXX-XXX")
+    @Pattern(regexp = "\\d{5}(-)?\\d{3}", message = "CEP inválido. Deve estar no formato XXXXX-XXX ou XXXXXXXX")
 	private String CEP;
 
 	public Endereco() {}

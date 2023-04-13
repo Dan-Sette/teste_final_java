@@ -16,11 +16,9 @@ public class ClienteDTO {
 	private String nome;
 	@Id
 	@NotNull(message = "O CPF não pode ser nulo")
-	@Pattern(regexp = "[0-9]{11}", message = "O CPF deve conter apenas dígitos numéricos")
 	private String cpf;
 	
 	@NotNull(message = "O telefone não pode ser nulo")
-    @Pattern(regexp = "\\([0-9]{2}\\)[0-9]{4,5}-[0-9]{4}", message = "O telefone deve ter o formato (XX)XXXX-XXXX ou (XX)XXXXX-XXXX")
 	private String telefone;
 	
 	@Embedded

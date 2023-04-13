@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,7 @@ public class ClienteController {
 	}
 
 	@PostMapping
+	@CrossOrigin(origins = "http://localhost:4200")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ClienteDTO cadastraCliente(@Valid @RequestBody ClienteDTO clienteDTO) {
 		Cliente clienteRequest = ClienteDTO.retornaCliente(clienteDTO);
@@ -48,6 +50,7 @@ public class ClienteController {
 	}
 	
 	@GetMapping
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ResponseEntity<List<ClienteDTO>> retornaTodosOsClientes(){
 		List<Cliente> listaDeClientes =  this.clienteService.retornaTodosOsClientes();
 		List<ClienteDTO> listaDeClientesDTO =	listaDeClientes.stream()
@@ -59,6 +62,7 @@ public class ClienteController {
 	}
 	
 	@GetMapping("/{cpf}")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ClienteDTO retornarCliente(@PathVariable String cpf) throws ClienteNaoEncontradoException{
 		Optional<Cliente> clienteOptional =  this.clienteService.retornaCliente(cpf);
 		Cliente clienteParaRetornar = clienteOptional.get();
@@ -66,6 +70,7 @@ public class ClienteController {
 	}
 	
 	@PutMapping("/{cpf}")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public ClienteDTO alteraLivro(@PathVariable String cpf, @Valid @RequestBody ClienteDTO cliente) throws ClienteNaoEncontradoException {
 		Cliente clienteRequest = ClienteDTO.retornaCliente(cliente);
 
@@ -73,8 +78,9 @@ public class ClienteController {
 		return ClienteDTO.retornaCliente(clienteAlterado);
 	}
 	
-	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{cpf}")
+	@CrossOrigin(origins = "http://localhost:4200")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deletaCliente(@PathVariable String cpf) throws ClienteNaoEncontradoException {
 
 		this.clienteService.deletaCliente(cpf);
