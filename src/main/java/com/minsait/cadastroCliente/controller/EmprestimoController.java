@@ -46,12 +46,11 @@ public class EmprestimoController {
 	
 	@PostMapping("{CPFCliente}/emprestimos")
 	@ResponseStatus(HttpStatus.CREATED)
-	public EmprestimoDTO cadastraEmprestimo(@Valid @RequestBody EmprestimoDTO emprestimoDTO) throws ClienteNaoEncontradoException, EmprestimoForaDoLimiteException {
+	public EmprestimoDTOResponse cadastraEmprestimo(@Valid @RequestBody EmprestimoDTO emprestimoDTO) throws ClienteNaoEncontradoException, EmprestimoForaDoLimiteException {
 		Emprestimo emprestimo = emprestimoDTO.retornaEmprestimo(emprestimoDTO);
 		Optional<ClienteDTO> clienteDTOOptional = Optional.ofNullable(this.clienteController.retornarCliente(emprestimo.getCpfCliente()));
 		ClienteDTO clienteDTO = clienteDTOOptional.get();
 		Cliente cliente = ClienteDTO.retornaCliente(clienteDTO);
-		Emprestimo emprestimoParaRetorno;
 		this.emprestimoService.calculaValorTotalEmprestimosPorCliente(cliente, emprestimo.getValorInicial());
 		if(clienteDTOOptional.isPresent()) {
 			emprestimo.setCliente(cliente);
@@ -60,23 +59,23 @@ public class EmprestimoController {
 			emprestimo.setRelacionamento(emprestimoDTO.getRelacionamento());
 			Long numeroDeEmprestimos = this.emprestimoService.contaTodosOsEmprestimosPorCPF(emprestimo.getCpfCliente());
 			emprestimo.fazCalculoEmprestimo(numeroDeEmprestimos);
-			emprestimoParaRetorno = this.emprestimoService.cadastraEmprestimo(emprestimo);
+			this.emprestimoService.cadastraEmprestimo(emprestimo);
 
 		} else {
 			throw new ClienteNaoEncontradoException(emprestimo.getCpfCliente());
 		}
-		return emprestimoDTO.retornaEmprestimo(emprestimoParaRetorno);
+		return modelMapper.map(emprestimo, EmprestimoDTOResponse.class);
 	}
 	
 	@GetMapping("/{CPFCliente}/emprestimos")
-	public ResponseEntity<List<EmprestimoDTO>> retornaTodosOsEmprestimosPorCPF(@PathVariable String CPFCliente) {
+	public ResponseEntity<List<EmprestimoDTOResponse>> retornaTodosOsEmprestimosPorCPF(@PathVariable String CPFCliente) {
 		List<Emprestimo> listaDeEmprestimos =  this.emprestimoService.retornaTodosOsEmprestimos(CPFCliente);
-		List<EmprestimoDTO> listaDeEmprestimoDTO =	listaDeEmprestimos.stream()
+		List<EmprestimoDTOResponse> listaDeEmprestimoDTOResponse =	listaDeEmprestimos.stream()
 												.map(cliente -> modelMapper
-												.map(cliente, EmprestimoDTO.class))
+												.map(cliente, EmprestimoDTOResponse.class))
 												.collect(Collectors.toList());
 		
-		return ResponseEntity.ok(listaDeEmprestimoDTO);
+		return ResponseEntity.ok(listaDeEmprestimoDTOResponse);
 	}
 	
 	@GetMapping("/{CPFCliente}/emprestimos/{id}")

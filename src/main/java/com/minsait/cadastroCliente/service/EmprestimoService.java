@@ -57,7 +57,7 @@ public class EmprestimoService {
 		if(somaEmprestimos == null) {
 			somaEmprestimos = new BigDecimal(0);
 		}
-		somaEmprestimos.add(emprestimoAtual);
+		somaEmprestimos = somaEmprestimos.add(emprestimoAtual);
 		BigDecimal fatorMultiplicador = new BigDecimal(10);
 		BigDecimal limiteEmprestimosCliente = cliente.getRendimentoMensal().multiply(fatorMultiplicador);
 		int comparacao = limiteEmprestimosCliente.compareTo(somaEmprestimos);
